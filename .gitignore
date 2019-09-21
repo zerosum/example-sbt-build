@@ -1,0 +1,9 @@
+### sbt
+target/
+
+### idea
+.idea
+*.iml
+
+### macos
+.DS_Store
