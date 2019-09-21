@@ -3,7 +3,7 @@ ThisBuild / scalaVersion := "2.13.1"
 lazy val root = (project in file("."))
   .settings(
     clean := Def.taskDyn(clean in application).value,
-    assembly := Def.taskDyn(assembly in application).value
+    stage := Def.taskDyn(stage in application).value
   )
 
 lazy val base = (project in file("modules/base"))
@@ -23,16 +23,21 @@ lazy val base = (project in file("modules/base"))
 lazy val domain = (project in file("modules/domain"))
   .dependsOn(base)
 
-lazy val packagingSettings = Seq(
-  assemblyJarName in assembly := "app.jar",
-  mainClass in assembly := Some("dev.zerosum.example.Application")
-)
-
 lazy val application = (project in file("modules/application"))
   .aggregate(base, domain)
   .dependsOn(domain)
-  .settings(aggregate in assembly := false)
-  .settings(packagingSettings: _*)
+  .enablePlugins(JavaAppPackaging)
+  .settings(
+    packageName in Docker := "sample",
+    version in Docker := "1.0",
+    dockerRepository := Some("z3r05um"),
+    maintainer in Docker := "zerosum <mail@example.com>",
+    dockerExposedPorts := List(8080),
+    dockerBaseImage := "adoptopenjdk/openjdk8:ubuntu",
+    dockerCmd := Nil,
+    daemonUser in Docker := "zerosum",
+    mainClass in Compile := Some("dev.zerosum.example.Application")
+  )
   .settings(
     libraryDependencies ++= {
       val akkaHttpVersion   = "10.1.9"

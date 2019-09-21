@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  app:
+    image: 'z3r05um/sample:1.0'
+    ports:
+      - '8080:8080'

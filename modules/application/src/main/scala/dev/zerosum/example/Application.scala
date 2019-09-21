@@ -17,7 +17,7 @@ object Application {
     design.withSession { session =>
       session
         .build[HttpServer]
-        .start("localhost", 8080, settings = ServerSettings(system))
+        .start("0.0.0.0", 8080, settings = ServerSettings(system))
     }
   }
 }
